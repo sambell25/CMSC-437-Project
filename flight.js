@@ -1,7 +1,7 @@
 const navItems = [
     { label: "Flight", href: "flight.html", active: true },
     { label: "Media", href: "media.html" },
-    { label: "Ordering", href: "interactive.html" },
+    { label: "Ordering", href: "ordering.html" },
     { label: "Services", href: "interactive.html" },
 ];
 
