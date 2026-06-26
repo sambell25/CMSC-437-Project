@@ -128,7 +128,7 @@ function OrderingPage() {
     function Nav() {
         return (
             <header className="top-nav shadow-sm">
-                <a className="nav-brand" href="flight.html">
+                <a className="nav-brand" href="index.html" aria-label="SkyLink login page">
                     <span className="brand-mark">SL</span>
                     <span>SkyLink</span>
                 </a>
@@ -145,9 +145,9 @@ function OrderingPage() {
                         );
                     })}
                 </nav>
-                <button className="attendant-button btn btn-primary" type="button">
+                <a className="attendant-button btn btn-primary" href="interactive.html#attendant">
                     Call Attendant
-                </button>
+                </a>
             </header>
         );
     }

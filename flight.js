@@ -74,7 +74,7 @@ function FlightPage() {
     return (
         <div className="app-shell">
             <header className="top-nav shadow-sm">
-                <a className="nav-brand" href="flight.html" aria-label="SkyLink flight dashboard">
+                <a className="nav-brand" href="index.html" aria-label="SkyLink login page">
                     <span className="brand-mark">SL</span>
                     <span>SkyLink</span>
                 </a>
@@ -92,7 +92,9 @@ function FlightPage() {
                     ))}
                 </nav>
 
-                <button className="attendant-button btn btn-primary" type="button">Call Attendant</button>
+                <a className="attendant-button btn btn-primary" href="interactive.html#attendant">
+                    Call Attendant
+                </a>
             </header>
 
             <main className="dashboard container-fluid">
