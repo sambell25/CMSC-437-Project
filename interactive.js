@@ -49,7 +49,13 @@ const safetyItems = [
 
 function SectionHeader({ eyebrow, title, children }) {
     return (
-        <section className="dashboard-hero shadow-sm">
+        <section
+            className="dashboard-hero hero-image shadow-sm"
+            style={{
+                backgroundImage:
+                    "linear-gradient(135deg, rgba(16, 35, 63, 0.84), rgba(13, 110, 253, 0.48)), url('https://images.unsplash.com/photo-1540339832862-474599807836?w=1600&h=700&fit=crop')",
+            }}
+        >
             <div>
                 <p className="eyebrow">{eyebrow}</p>
                 <h1>{title}</h1>
@@ -60,29 +66,6 @@ function SectionHeader({ eyebrow, title, children }) {
                 Seat 14C
             </div>
         </section>
-    );
-}
-
-function ServicesTabs({ activeTab, onChange }) {
-    return (
-        <div className="card panel p-0 border-0 shadow-sm mb-4 mx-auto" style={{ maxWidth: "1180px" }}>
-            <div className="card-body">
-                <div className="nav nav-pills gap-2" role="tablist" aria-label="Passenger service sections">
-            {serviceTabs.map((tab) => (
-                <button
-                    key={tab.id}
-                    className={`nav-link fw-bold ${activeTab === tab.id ? "active" : ""}`}
-                    type="button"
-                    role="tab"
-                    aria-selected={activeTab === tab.id}
-                    onClick={() => onChange(tab.id)}
-                >
-                    {tab.label}
-                </button>
-            ))}
-                </div>
-            </div>
-        </div>
     );
 }
 
@@ -627,7 +610,12 @@ function InteractivePage() {
                     View crew announcements, safety information, cabin assistance, paid phone calls,
                     and feedback tools from one service center.
                 </SectionHeader>
-                <ServicesTabs activeTab={activeTab} onChange={changeTab} />
+                <SubTabs
+                    tabs={serviceTabs}
+                    active={activeTab}
+                    onChange={changeTab}
+                    ariaLabel="Passenger service sections"
+                />
                 <ActiveServicePanel activeTab={activeTab} />
             </main>
         </div>

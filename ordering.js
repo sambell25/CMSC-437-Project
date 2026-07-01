@@ -209,7 +209,13 @@ function OrderingPage() {
             <div className="app-shell">
                 <Nav />
                 <main className="dashboard container-fluid">
-                    <section className="dashboard-hero hero-card shadow-sm">
+                    <section
+                        className="dashboard-hero hero-card hero-image shadow-sm"
+                        style={{
+                            backgroundImage:
+                                "linear-gradient(135deg, rgba(16, 35, 63, 0.84), rgba(13, 110, 253, 0.48)), url('https://images.unsplash.com/photo-1559056199-641a0ac8b55e?w=1600&h=700&fit=crop')",
+                        }}
+                    >
                         <div>
                             <p className="eyebrow">Checkout</p>
                             <h1>Review &amp; Pay</h1>
@@ -331,7 +337,13 @@ function OrderingPage() {
             <Nav />
             <main className="dashboard container-fluid">
 
-                <section className="dashboard-hero hero-card shadow-sm">
+                <section
+                    className="dashboard-hero hero-card hero-image shadow-sm"
+                    style={{
+                        backgroundImage:
+                            "linear-gradient(135deg, rgba(16, 35, 63, 0.84), rgba(13, 110, 253, 0.48)), url('https://images.unsplash.com/photo-1551218808-94e220e084d2?w=1600&h=700&fit=crop')",
+                    }}
+                >
                     <div>
                         <p className="eyebrow">Food &amp; Duty-Free</p>
                         <h1>Order Onboard</h1>
@@ -347,20 +359,12 @@ function OrderingPage() {
 
                     {/* Menu panel */}
                     <div>
-                        <div className="tab-bar">
-                            {TABS.map(function(tab) {
-                                return (
-                                    <button
-                                        key={tab}
-                                        className={activeTab === tab ? "tab-btn tab-btn--active" : "tab-btn"}
-                                        onClick={() => setActiveTab(tab)}
-                                    >
-                                        {tab}
-                                    </button>
-                                );
-                            })}
-                        </div>
-
+                        <SubTabs
+                            tabs={TABS}
+                            active={activeTab}
+                            onChange={setActiveTab}
+                            ariaLabel="Ordering categories"
+                        />
                         <div className="panel shadow-sm">
                             {items.map(function(item, idx) {
                                 return (
