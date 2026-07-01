@@ -33,3 +33,39 @@ function SimpleNav({ active = "Media" }) {
         </header>
     );
 }
+
+function SubTabs({ tabs, active, onChange, ariaLabel = "Section tabs" }) {
+    function getTabId(tab) {
+        return typeof tab === "string" ? tab : tab.id;
+    }
+
+    function getTabLabel(tab) {
+        return typeof tab === "string" ? tab : tab.label;
+    }
+
+    return (
+        <div className="card panel p-0 border-0 shadow-sm mb-4 mx-auto" style={{ maxWidth: "1180px" }}>
+            <div className="card-body">
+                <div className="nav nav-pills gap-2" role="tablist" aria-label={ariaLabel}>
+                    {tabs.map((tab) => {
+                        const tabId = getTabId(tab);
+                        const tabLabel = getTabLabel(tab);
+
+                        return (
+                            <button
+                                key={tabId}
+                                className={`nav-link fw-bold ${active === tabId ? "active" : ""}`}
+                                type="button"
+                                role="tab"
+                                aria-selected={active === tabId}
+                                onClick={() => onChange(tabId)}
+                            >
+                                {tabLabel}
+                            </button>
+                        );
+                    })}
+                </div>
+            </div>
+        </div>
+    );
+}

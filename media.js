@@ -60,6 +60,13 @@ const PLAYLISTS = [
     { name: 'Easy Landing Mix', items: ['Heathrow Nights'] }
 ];
 
+const mediaTabs = [
+    { id: 'catalog', label: 'Catalog' },
+    { id: 'playlists', label: 'Playlists' },
+    { id: 'favorites', label: 'Favorites' },
+    { id: 'attractions', label: 'Attractions' },
+];
+
 function MediaPage(){
     const [route, setRoute] = React.useState('catalog');
     const [favorites, setFavorites] = React.useState([]);
@@ -67,19 +74,27 @@ function MediaPage(){
         <div>
             <SimpleNav active="Media" />
             <main className="dashboard">
-                <section className="dashboard-hero guest-hero panel">
+                <section
+                    className="dashboard-hero guest-hero panel hero-image"
+                    style={{
+                        backgroundPosition: "center 42%",
+                        backgroundImage:
+                            "linear-gradient(135deg, rgba(16, 35, 63, 0.76), rgba(13, 110, 253, 0.38)), url('https://images.unsplash.com/photo-1517604931442-7e0c8ed2963c?w=1600&h=700&fit=crop')",
+                    }}
+                >
                     <div>
                         <p className="eyebrow">In-flight Entertainment</p>
                         <h1>Media & Attractions</h1>
                         <p>Browse movies, TV shows, and music. Save favorites and explore attractions at your destination.</p>
-                        <div className="guest-actions" style={{marginTop:12}}>
-                            <button className="secondary-button" type="button" onClick={() => setRoute('catalog')}>Catalog</button>
-                            <button className="secondary-button" type="button" onClick={() => setRoute('playlists')}>Playlists</button>
-                            <button className="secondary-button" type="button" onClick={() => setRoute('favorites')}>Favorites</button>
-                            <button className="secondary-button" type="button" onClick={() => setRoute('attractions')}>Attractions</button>
-                        </div>
                     </div>
                 </section>
+
+                <SubTabs
+                    tabs={mediaTabs}
+                    active={route}
+                    onChange={setRoute}
+                    ariaLabel="Media sections"
+                />
 
                 <section style={{maxWidth:1180, margin:'18px auto'}}>
                     {route === 'catalog' && <Catalog favorites={favorites} setFavorites={setFavorites} onSelectRoute={setRoute} />}

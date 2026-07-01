@@ -5,12 +5,58 @@ const navItems = [
     { label: "Services", href: "interactive.html" },
 ];
 
-const flightStats = [
-    { label: "Altitude", value: "36,000 ft" },
-    { label: "Airspeed", value: "548 mph" },
-    { label: "ETA", value: "5h 42m" },
-    { label: "Arrival Gate", value: "B32" },
-];
+const routeStartProgress = 0.18;
+const routeEndProgress = 0.82;
+const maxEtaMinutes = 342;
+const simulatedMinuteMs = 60000;
+const simulatedLoopMs = maxEtaMinutes * simulatedMinuteMs;
+const telemetryRefreshMs = 5000;
+
+function interpolatePoint(start, end, progress) {
+    return [
+        start[0] + (end[0] - start[0]) * progress,
+        start[1] + (end[1] - start[1]) * progress,
+    ];
+}
+
+function getRoutePhase(elapsedMs) {
+    return (elapsedMs % simulatedLoopMs) / simulatedLoopMs;
+}
+
+function getRouteProgress(elapsedMs) {
+    const phase = getRoutePhase(elapsedMs);
+    return routeStartProgress + phase * (routeEndProgress - routeStartProgress);
+}
+
+function formatEta(totalMinutes) {
+    const hours = Math.floor(totalMinutes / 60);
+    const minutes = totalMinutes % 60;
+    return `${hours}h ${minutes.toString().padStart(2, "0")}m`;
+}
+
+function getSimulatedFlightInfo(elapsedMs) {
+    const elapsedMinutes = Math.floor((elapsedMs % simulatedLoopMs) / simulatedMinuteMs);
+    const routeProgress = getRouteProgress(elapsedMs);
+    const altitude =
+        36000 +
+        Math.round(Math.sin(elapsedMs / 45000) * 160) +
+        Math.round(Math.sin(elapsedMs / 13000) * 45);
+    const airspeed =
+        548 +
+        Math.round(Math.cos(elapsedMs / 52000) * 8) +
+        Math.round(Math.sin(elapsedMs / 17000) * 4);
+    const etaMinutes = Math.max(0, maxEtaMinutes - elapsedMinutes);
+
+    return {
+        progress: routeProgress,
+        stats: [
+            { label: "Altitude", value: `${altitude.toLocaleString()} ft` },
+            { label: "Airspeed", value: `${airspeed} mph` },
+            { label: "ETA", value: formatEta(etaMinutes) },
+            { label: "Route Progress", value: `${(routeProgress * 100).toFixed(1)}%` },
+        ],
+    };
+}
 
 const messages = [
     {
@@ -26,6 +72,19 @@ const messages = [
 ];
 
 function FlightPage() {
+    const [simulationElapsedMs, setSimulationElapsedMs] = React.useState(0);
+    const simulatedFlightInfo = getSimulatedFlightInfo(simulationElapsedMs);
+
+    React.useEffect(() => {
+        const telemetryTimer = window.setInterval(() => {
+            setSimulationElapsedMs((currentElapsedMs) =>
+                (currentElapsedMs + telemetryRefreshMs) % simulatedLoopMs
+            );
+        }, telemetryRefreshMs);
+
+        return () => window.clearInterval(telemetryTimer);
+    }, []);
+
     React.useEffect(() => {
         if (!window.L) {
             return;
@@ -65,10 +124,30 @@ function FlightPage() {
             weight: 3,
         }).addTo(map).bindTooltip("London Heathrow");
 
-        L.marker([47.2, -34.5]).addTo(map).bindTooltip("Current aircraft location");
+        const aircraftIcon = L.divIcon({
+            className: "aircraft-marker",
+            html: "<span aria-hidden=\"true\">&#9992;</span>",
+            iconAnchor: [16, 16],
+            iconSize: [32, 32],
+        });
+
+        let routeElapsedMs = 0;
+        const aircraftMarker = L.marker(
+            interpolatePoint(baltimore, london, getRouteProgress(routeElapsedMs)),
+            { icon: aircraftIcon }
+        ).addTo(map).bindTooltip("Current aircraft location");
+
+        const routeTimer = window.setInterval(() => {
+            routeElapsedMs = (routeElapsedMs + telemetryRefreshMs) % simulatedLoopMs;
+            aircraftMarker.setLatLng(interpolatePoint(baltimore, london, getRouteProgress(routeElapsedMs)));
+        }, telemetryRefreshMs);
+
         map.fitBounds(route.getBounds(), { padding: [28, 28] });
 
-        return () => map.remove();
+        return () => {
+            window.clearInterval(routeTimer);
+            map.remove();
+        };
     }, []);
 
     return (
@@ -98,7 +177,14 @@ function FlightPage() {
             </header>
 
             <main className="dashboard container-fluid">
-                <section className="dashboard-hero hero-card shadow-sm">
+                <section
+                    className="dashboard-hero hero-card hero-image shadow-sm"
+                    style={{
+                        backgroundPosition: "center 46%",
+                        backgroundImage:
+                            "linear-gradient(135deg, rgba(16, 35, 63, 0.78), rgba(13, 110, 253, 0.42)), url('https://images.unsplash.com/photo-1540962351504-03099e0a754b?w=1600&h=700&fit=crop')",
+                    }}
+                >
                     <div>
                         <p className="eyebrow">Flight IF 437</p>
                         <h1>Baltimore to London</h1>
@@ -141,10 +227,10 @@ function FlightPage() {
                     <div className="panel stats-panel shadow-sm">
                         <div className="panel-heading">
                             <h2>Live Flight Info</h2>
-                            <span>Updated now</span>
+                            <span>Simulated Live</span>
                         </div>
                         <div className="stat-grid">
-                            {flightStats.map((stat) => (
+                            {simulatedFlightInfo.stats.map((stat) => (
                                 <article className="stat-card" key={stat.label}>
                                     <span>{stat.label}</span>
                                     <strong>{stat.value}</strong>

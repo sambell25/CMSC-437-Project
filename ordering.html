@@ -25,41 +25,6 @@
             }
 
             /* ── Tab bar ──────────────────────────────────────────────────────────────── */
-            .tab-bar {
-                display: flex;
-                flex-wrap: wrap;
-                gap: 8px;
-                margin-bottom: 14px;
-            }
-
-            .tab-btn {
-                background: var(--sky-soft);
-                border: 1px solid var(--sky-border);
-                border-radius: 8px;
-                color: var(--sky-muted);
-                cursor: pointer;
-                font-size: 0.88rem;
-                font-weight: 700;
-                padding: 8px 16px;
-                transition: background 120ms, color 120ms;
-            }
-
-            .tab-btn:hover {
-                background: #eaf2ff;
-                color: var(--sky-primary);
-            }
-
-            .tab-btn--active {
-                background: var(--sky-primary);
-                border-color: var(--sky-primary);
-                color: #ffffff;
-            }
-
-            .tab-btn--active:hover {
-                background: var(--sky-primary-dark);
-                color: #ffffff;
-            }
-
             /* ── Menu rows ────────────────────────────────────────────────────────────── */
             .menu-row {
                 align-items: center;
@@ -377,6 +342,7 @@
         <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
         <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
         <script src="https://unpkg.com/@babel/standalone@7.23.9/babel.min.js"></script>
+        <script type="text/babel" src="common.js"></script>
         <script type="text/babel" src="ordering.js"></script>
     </head>
     <body>
